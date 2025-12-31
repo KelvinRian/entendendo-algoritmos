@@ -4,19 +4,22 @@
     {
         public int? BuscarPosicaoNaLista(int item, List<int> lista)
         {
-            var itemNaPrimeiraPosicao = lista[0];
-            var itemNaUltimaPosicao = lista[lista.Count - 1];
-            var itemNoMeio = lista[lista.Count / 2];
+            var primeiraPosicao = 0;
+            var ultimaPosicao = lista.Count - 1;
 
-            if (item == itemNoMeio)
+            while (primeiraPosicao <= ultimaPosicao)
             {
-                return lista.IndexOf(itemNoMeio);
-            }
+                var posicaoDoMeio = (primeiraPosicao + ultimaPosicao) / 2;
+                var itemDoMeio = lista[posicaoDoMeio];
 
-            if (item > itemNoMeio)
-            {
-                // TODO
-            }
+                if (itemDoMeio == item)
+                    return posicaoDoMeio;
+
+                if (itemDoMeio > item)
+                    ultimaPosicao = posicaoDoMeio - 1;
+                else
+                    primeiraPosicao = posicaoDoMeio + 1;
+            };
 
             return null;
         }

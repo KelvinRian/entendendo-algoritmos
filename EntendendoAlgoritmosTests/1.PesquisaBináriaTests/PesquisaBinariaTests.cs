@@ -4,33 +4,25 @@ namespace EntendendoAlgoritmosTests._1.PesquisaBináriaTests
 {
     public class PesquisaBinariaTests
     {
-        [Fact]
-        public void DeveEncontrarItemNoMeioDaLista()
-        {
-            var lista = new List<int> { 1, 3, 5, 7, 9 };
-
-            var itemDoMeio = lista[2];
-
-            var result = new PesquisaBinaria().BuscarPosicaoNaLista(itemDoMeio, lista);
-
-            Assert.Equal(2, result);
-        }
-
-        [Fact]
-        public void DeveEncontrarItemAcimaDoMeio()
+        [Theory]
+        [InlineData(1, 0)]
+        [InlineData(2, 1)]
+        [InlineData(3, 2)]
+        [InlineData(4, 3)]
+        [InlineData(5, 4)]
+        [InlineData(6, 5)]
+        [InlineData(7, 6)]
+        [InlineData(8, 7)]
+        [InlineData(9, 8)]
+        [InlineData(10, 9)]
+        [InlineData(11, null)]
+        public void DeveEncontrarItemAcimaDoMeio(int itemAPesquisar, int? posicaoNaLista)
         {
             var lista = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-            var item = 8;
 
-            var result = new PesquisaBinaria().BuscarPosicaoNaLista(item, lista);
+            var resultado = new PesquisaBinaria().BuscarPosicaoNaLista(itemAPesquisar, lista);
 
-            var posicaoEsperada = lista.IndexOf(item);
-            Assert.Equal(posicaoEsperada, result);
+            Assert.Equal(posicaoNaLista, resultado);
         }
-
-        // TODO - DeveEncontrarItemAbaixoDoMeio
-        // TODO - DeveEncontrarItemNaPrimeiraPosicao
-        // TODO - DeveEncontrarItemNaUltimaPosicao
-        // TODO - DeveRetornarNuloQuandoItemNaoExistirNaLista
     }
 }
