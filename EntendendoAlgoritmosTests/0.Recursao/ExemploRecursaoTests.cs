@@ -1,13 +1,13 @@
-﻿using EntendendoAlgoritmos._0.Recurssao;
+﻿using EntendendoAlgoritmos._0.Recursao;
 
-namespace EntendendoAlgoritmosTests._0.Recurssao
+namespace EntendendoAlgoritmosTests._0.Recursao
 {
-    public class ExemploRecurssaoTests
+    public class ExemploRecursaoTests
     {
         [Fact]
         public void DeveRetornarNoCasoBase()
         {
-            var resultado = ExemploRecurssao.Fatorial(1);
+            var resultado = ExemploRecursao.Fatorial(1);
             var resultadoEsperado = 1;
             Assert.Equal(resultadoEsperado, resultado);
         }
@@ -15,7 +15,7 @@ namespace EntendendoAlgoritmosTests._0.Recurssao
         [Fact]
         public void DeveRetornarFatorialChamandoCasoRecurssivo()
         {
-            var resultado = ExemploRecurssao.Fatorial(3);
+            var resultado = ExemploRecursao.Fatorial(3);
             var resultadoEsperado = 6;
             Assert.Equal(resultadoEsperado, resultado);
         }

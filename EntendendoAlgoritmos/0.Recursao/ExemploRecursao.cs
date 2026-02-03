@@ -1,6 +1,6 @@
-﻿namespace EntendendoAlgoritmos._0.Recurssao
+﻿namespace EntendendoAlgoritmos._0.Recursao
 {
-    public static class ExemploRecurssao
+    public static class ExemploRecursao
     {
         public static int Fatorial(int numero)
         {
