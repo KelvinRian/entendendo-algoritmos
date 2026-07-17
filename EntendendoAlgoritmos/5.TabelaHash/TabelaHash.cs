@@ -6,16 +6,20 @@ namespace EntendendoAlgoritmos._5.TabelaHash
     {
         // TODO
         // Adicionar tratamento de colisão
-        public Preco[] ArrayDePrecos { get; set; }
+        // Adequar, Busca e Redimensionamento do Array
+
+        public List<Preco>[] ArrayPrecosList { get; set; }
         private int _quantidadeDeItens;
 
         public TabelaHash(int tamanhoDoArray)
         {
-            ArrayDePrecos = new Preco[tamanhoDoArray];
+            ArrayPrecosList = new List<Preco>[tamanhoDoArray];
         }
 
         public void InserirPreco(Preco preco)
         {
+            // TODO
+            // Com colisões, a quantidade não aumenta todo vez que um item é adicionado, mas sim toda vez que um item é adicionado sem colisões.
             _quantidadeDeItens++;
 
             var fatorDeCarga = ObterFatorDeCarga();
@@ -24,25 +28,28 @@ namespace EntendendoAlgoritmos._5.TabelaHash
                 RedimensionarArrayERedistribuirItens();
             }
 
-            int indice = ObterIndice(preco.Item, (uint)ArrayDePrecos.Length);
-            ArrayDePrecos[indice] = preco;
+            int indice = ObterIndice(preco.Item, (uint)ArrayPrecosList.Length);
 
+            if (ArrayPrecosList[indice] != null)
+                ArrayPrecosList[indice].Add(preco);
+            else
+                ArrayPrecosList[indice] = new List<Preco>() { preco };
         }
 
         private double ObterFatorDeCarga()
         {
-            return (double)_quantidadeDeItens / ArrayDePrecos.Length;
+            return (double)_quantidadeDeItens / ArrayPrecosList.Length;
         }
 
         private void RedimensionarArrayERedistribuirItens()
         {
-            var novoArray = new Preco[ArrayDePrecos.Length * 2];
-            foreach (var itemNoArrayAntigo in ArrayDePrecos.Where(x => x != null))
-            {
-                InserirNoNovoArray(novoArray, itemNoArrayAntigo);
-            }
+            //var novoArray = new Preco[ArrayPrecosList.Length * 2];
+            //foreach (var itemNoArrayAntigo in ArrayPrecosList.Where(x => x != null))
+            //{
+            //    InserirNoNovoArray(novoArray, itemNoArrayAntigo);
+            //}
 
-            ArrayDePrecos = novoArray;
+            //ArrayPrecosList = novoArray;
         }
 
         private void InserirNoNovoArray(Preco[] novoArray, Preco itemNoArrayAntigo)
@@ -60,9 +67,9 @@ namespace EntendendoAlgoritmos._5.TabelaHash
 
         public Preco BuscarPreco(string item)
         {
-            int indice = ObterIndice(item, (uint)ArrayDePrecos.Length);
+            int indice = ObterIndice(item, (uint)ArrayPrecosList.Length);
 
-            return ArrayDePrecos[indice];
+            return ArrayPrecosList[indice]?.FirstOrDefault();
         }
     }
 

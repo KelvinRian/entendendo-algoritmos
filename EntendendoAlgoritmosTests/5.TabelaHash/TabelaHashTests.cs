@@ -10,7 +10,7 @@ namespace EntendendoAlgoritmosTests._5.TabelaHashTest
         {
             var tamanhoDoArray = 10;
             var tabelaHash = new TabelaHash(tamanhoDoArray);
-            Assert.Equal(tamanhoDoArray, tabelaHash.ArrayDePrecos.Length);
+            Assert.Equal(tamanhoDoArray, tabelaHash.ArrayPrecosList.Length);
         }
 
         [Fact]
@@ -29,8 +29,7 @@ namespace EntendendoAlgoritmosTests._5.TabelaHashTest
             tabelaHash.InserirPreco(preco);
 
             //Assert
-            Assert.Equal(indiceEsperado, Array.IndexOf(tabelaHash.ArrayDePrecos, preco));
-            Assert.Equal(preco, tabelaHash.ArrayDePrecos[indiceEsperado]);
+            Assert.Equal(preco, tabelaHash.ArrayPrecosList[indiceEsperado].FirstOrDefault());
         }
 
         [Fact]
@@ -81,40 +80,66 @@ namespace EntendendoAlgoritmosTests._5.TabelaHashTest
 
             //Assert Tamanho do Array
             var tamanhoArrayEsperado = tamanhoArray * 2;
-            Assert.Equal(tamanhoArrayEsperado, tabelaHash.ArrayDePrecos.Length);
+            Assert.Equal(tamanhoArrayEsperado, tabelaHash.ArrayPrecosList.Length);
 
             //Assert Indices
             uint hashDoItem1 = FuncaoHash.FNV1a(preco1.Item);
             int indiceEsperadoParaItem1 = (int)(hashDoItem1 % (uint)tamanhoArrayEsperado);
-            Assert.Equal(preco1, tabelaHash.ArrayDePrecos[indiceEsperadoParaItem1]);
+            Assert.Equal(preco1, tabelaHash.ArrayPrecosList[indiceEsperadoParaItem1].FirstOrDefault());
 
             uint hashDoItem2 = FuncaoHash.FNV1a(preco2.Item);
             int indiceEsperadoParaItem2 = (int)(hashDoItem2 % (uint)tamanhoArrayEsperado);
-            Assert.Equal(preco2, tabelaHash.ArrayDePrecos[indiceEsperadoParaItem2]);
+            Assert.Equal(preco2, tabelaHash.ArrayPrecosList[indiceEsperadoParaItem2].FirstOrDefault());
 
             uint hashDoItem3 = FuncaoHash.FNV1a(preco3.Item);
             int indiceEsperadoParaItem3 = (int)(hashDoItem3 % (uint)tamanhoArrayEsperado);
-            Assert.Equal(preco3, tabelaHash.ArrayDePrecos[indiceEsperadoParaItem3]);
+            Assert.Equal(preco3, tabelaHash.ArrayPrecosList[indiceEsperadoParaItem3].FirstOrDefault());
 
             uint hashDoItem4 = FuncaoHash.FNV1a(preco4.Item);
             int indiceEsperadoParaItem4 = (int)(hashDoItem4 % (uint)tamanhoArrayEsperado);
-            Assert.Equal(preco4, tabelaHash.ArrayDePrecos[indiceEsperadoParaItem4]);
+            Assert.Equal(preco4, tabelaHash.ArrayPrecosList[indiceEsperadoParaItem4].FirstOrDefault());
 
             uint hashDoItem5 = FuncaoHash.FNV1a(preco5.Item);
             int indiceEsperadoParaItem5 = (int)(hashDoItem5 % (uint)tamanhoArrayEsperado);
-            Assert.Equal(preco5, tabelaHash.ArrayDePrecos[indiceEsperadoParaItem5]);
+            Assert.Equal(preco5, tabelaHash.ArrayPrecosList[indiceEsperadoParaItem5].FirstOrDefault());
 
             uint hashDoItem6 = FuncaoHash.FNV1a(preco6.Item);
             int indiceEsperadoParaItem6 = (int)(hashDoItem6 % (uint)tamanhoArrayEsperado);
-            Assert.Equal(preco6, tabelaHash.ArrayDePrecos[indiceEsperadoParaItem6]);
+            Assert.Equal(preco6, tabelaHash.ArrayPrecosList[indiceEsperadoParaItem6].FirstOrDefault());
 
             uint hashDoItem7 = FuncaoHash.FNV1a(preco7.Item);
             int indiceEsperadoParaItem7 = (int)(hashDoItem7 % (uint)tamanhoArrayEsperado);
-            Assert.Equal(preco7, tabelaHash.ArrayDePrecos[indiceEsperadoParaItem7]);
+            Assert.Equal(preco7, tabelaHash.ArrayPrecosList[indiceEsperadoParaItem7].FirstOrDefault());
 
             uint hashDoItem8 = FuncaoHash.FNV1a(preco8.Item);
             int indiceEsperadoParaItem8 = (int)(hashDoItem8 % (uint)tamanhoArrayEsperado);
-            Assert.Equal(preco8, tabelaHash.ArrayDePrecos[indiceEsperadoParaItem8]);
+            Assert.Equal(preco8, tabelaHash.ArrayPrecosList[indiceEsperadoParaItem8].FirstOrDefault());
+        }
+
+        [Fact]
+        public void DeveGerarColisao()
+        {
+            //Arrange
+            var tamanhoDoArray = 10;
+            var tabelaHash = new TabelaHash(tamanhoDoArray);
+
+            var precoBanana = new Preco("Banana", 2.50);
+            var precoLaranja = new Preco("Laranja", 1.50);
+
+            var hashBanana = FuncaoHash.FNV1a(precoBanana.Item);
+            var hashLaranja = FuncaoHash.FNV1a(precoLaranja.Item);
+
+            int indiceEsperadoBanana = (int)(hashBanana % (uint)tamanhoDoArray);
+            int indiceEsperadoLaranja = (int)(hashLaranja % (uint)tamanhoDoArray);
+
+            //Act
+            tabelaHash.InserirPreco(precoBanana);
+            tabelaHash.InserirPreco(precoLaranja);
+
+            //Assert
+            Assert.Equal(indiceEsperadoBanana, indiceEsperadoLaranja);
+            Assert.Contains(precoBanana, tabelaHash.ArrayPrecosList[indiceEsperadoBanana]);
+            Assert.Contains(precoLaranja, tabelaHash.ArrayPrecosList[indiceEsperadoLaranja]);
         }
     }
 }
