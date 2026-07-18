@@ -6,14 +6,16 @@ namespace EntendendoAlgoritmos._5.TabelaHash
     {
         // TODO
         // Adicionar tratamento de colisão
-        // Adequar, Busca e Redimensionamento do Array
+        // Adequar Redimensionamento do Array
 
-        public List<Preco>[] ArrayPrecosList { get; set; }
+        private List<Preco>[] _precosList;
+        public IReadOnlyList<List<Preco>> PrecosList => _precosList;
+
         private int _quantidadeDeItens;
 
         public TabelaHash(int tamanhoDoArray)
         {
-            ArrayPrecosList = new List<Preco>[tamanhoDoArray];
+            _precosList = new List<Preco>[tamanhoDoArray];
         }
 
         public void InserirPreco(Preco preco)
@@ -28,17 +30,17 @@ namespace EntendendoAlgoritmos._5.TabelaHash
                 RedimensionarArrayERedistribuirItens();
             }
 
-            int indice = ObterIndice(preco.Item, (uint)ArrayPrecosList.Length);
+            int indice = ObterIndice(preco.Item, (uint)_precosList.Length);
 
-            if (ArrayPrecosList[indice] != null)
-                ArrayPrecosList[indice].Add(preco);
+            if (_precosList[indice] != null)
+                _precosList[indice].Add(preco);
             else
-                ArrayPrecosList[indice] = new List<Preco>() { preco };
+                _precosList[indice] = new List<Preco>() { preco };
         }
 
         private double ObterFatorDeCarga()
         {
-            return (double)_quantidadeDeItens / ArrayPrecosList.Length;
+            return (double)_quantidadeDeItens / _precosList.Length;
         }
 
         private void RedimensionarArrayERedistribuirItens()
@@ -65,11 +67,11 @@ namespace EntendendoAlgoritmos._5.TabelaHash
             return indice;
         }
 
-        public Preco BuscarPreco(string item)
+        public Preco? BuscarPreco(string item)
         {
-            int indice = ObterIndice(item, (uint)ArrayPrecosList.Length);
+            int indice = ObterIndice(item, (uint)_precosList.Length);
 
-            return ArrayPrecosList[indice]?.FirstOrDefault();
+            return _precosList[indice]?.FirstOrDefault(x => x.Item == item);
         }
     }
 
