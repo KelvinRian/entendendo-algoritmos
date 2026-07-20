@@ -5,13 +5,12 @@ namespace EntendendoAlgoritmos._5.TabelaHash
     public class TabelaHash
     {
         // TODO
-        // Adicionar tratamento de colisão
-        // Adequar Redimensionamento do Array
+        // Refatorar com Clean Code
 
         private List<Preco>[] _precosList;
         public IReadOnlyList<List<Preco>> PrecosList => _precosList;
 
-        private int _quantidadeDeItens;
+        private int _quantidadeDeEspacosOcupados;
 
         public TabelaHash(int tamanhoDoArray)
         {
@@ -20,44 +19,65 @@ namespace EntendendoAlgoritmos._5.TabelaHash
 
         public void InserirPreco(Preco preco)
         {
-            // TODO
-            // Com colisões, a quantidade não aumenta todo vez que um item é adicionado, mas sim toda vez que um item é adicionado sem colisões.
-            _quantidadeDeItens++;
-
-            var fatorDeCarga = ObterFatorDeCarga();
-            if (fatorDeCarga > 0.7)
-            {
-                RedimensionarArrayERedistribuirItens();
-            }
-
             int indice = ObterIndice(preco.Item, (uint)_precosList.Length);
 
-            if (_precosList[indice] != null)
+            var temColisao = _precosList[indice] != null;
+
+            if (temColisao)
+            {
                 _precosList[indice].Add(preco);
+            }
             else
-                _precosList[indice] = new List<Preco>() { preco };
+            {
+                _quantidadeDeEspacosOcupados++;
+                var fatorDeCarga = ObterFatorDeCarga();
+                if (fatorDeCarga > 0.7)
+                {
+                    RedimensionarArrayERedistribuirItens();
+                    InserirPreco(preco);
+                }
+                else
+                {
+                    _precosList[indice] = new List<Preco>() { preco };
+                }
+            }
         }
 
         private double ObterFatorDeCarga()
         {
-            return (double)_quantidadeDeItens / _precosList.Length;
+            return (double)_quantidadeDeEspacosOcupados / _precosList.Length;
         }
 
         private void RedimensionarArrayERedistribuirItens()
         {
-            //var novoArray = new Preco[ArrayPrecosList.Length * 2];
-            //foreach (var itemNoArrayAntigo in ArrayPrecosList.Where(x => x != null))
-            //{
-            //    InserirNoNovoArray(novoArray, itemNoArrayAntigo);
-            //}
+            var novoArray = new List<Preco>[_precosList.Length * 2];
+            _quantidadeDeEspacosOcupados = 0;
 
-            //ArrayPrecosList = novoArray;
+            foreach (var itemNoArrayAntigo in _precosList.Where(x => x != null))
+            {
+                foreach (var preco in itemNoArrayAntigo)
+                {
+                    InserirNoNovoArray(novoArray, preco);
+                }
+            }
+
+            _precosList = novoArray;
         }
 
-        private void InserirNoNovoArray(Preco[] novoArray, Preco itemNoArrayAntigo)
+        private void InserirNoNovoArray(List<Preco>[] novoArray, Preco itemNoArrayAntigo)
         {
             var indiceNoNovoArray = ObterIndice(itemNoArrayAntigo.Item, (uint)novoArray.Length);
-            novoArray[indiceNoNovoArray] = itemNoArrayAntigo;
+
+            var temColisao = novoArray[indiceNoNovoArray] != null;
+            if (temColisao)
+            {
+                novoArray[indiceNoNovoArray].Add(itemNoArrayAntigo);
+            }
+            else
+            {
+                novoArray[indiceNoNovoArray] = new List<Preco>() { itemNoArrayAntigo };
+                _quantidadeDeEspacosOcupados++;
+            }
         }
 
         private int ObterIndice(string item, uint tamanhoDoArray)
