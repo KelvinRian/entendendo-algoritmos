@@ -10,7 +10,7 @@ namespace EntendendoAlgoritmosTests._5.TabelaHashTest
         {
             var tamanhoDoArray = 10;
             var tabelaHash = new TabelaHash(tamanhoDoArray);
-            Assert.Equal(tamanhoDoArray, tabelaHash.PrecosList.Count());
+            Assert.Equal(tamanhoDoArray, tabelaHash.ListasDePrecos.Count());
         }
 
         [Fact]  
@@ -29,7 +29,7 @@ namespace EntendendoAlgoritmosTests._5.TabelaHashTest
             tabelaHash.InserirPreco(preco);
 
             //Assert
-            Assert.Equal(preco, tabelaHash.PrecosList[indiceEsperado].FirstOrDefault());
+            Assert.Equal(preco, tabelaHash.ListasDePrecos[indiceEsperado].FirstOrDefault());
         }
 
         [Fact]
@@ -87,16 +87,16 @@ namespace EntendendoAlgoritmosTests._5.TabelaHashTest
 
             //Assert Tamanho do Array
             var tamanhoArrayEsperado = tamanhoArray * 2;
-            Assert.Equal(tamanhoArrayEsperado, tabelaHash.PrecosList.Count());
+            Assert.Equal(tamanhoArrayEsperado, tabelaHash.ListasDePrecos.Count());
 
             //Assert Indices
             uint hashDoItem1 = FuncaoHash.FNV1a(preco1.Item);
             int indiceEsperadoParaItem1 = (int)(hashDoItem1 % (uint)tamanhoArrayEsperado);
-            Assert.Equal(preco1, tabelaHash.PrecosList[indiceEsperadoParaItem1].FirstOrDefault());
+            Assert.Equal(preco1, tabelaHash.ListasDePrecos[indiceEsperadoParaItem1].FirstOrDefault());
 
             uint hashDoItem2 = FuncaoHash.FNV1a(preco2.Item);
             int indiceEsperadoParaItem2 = (int)(hashDoItem2 % (uint)tamanhoArrayEsperado);
-            Assert.Equal(preco2, tabelaHash.PrecosList[indiceEsperadoParaItem2].FirstOrDefault());
+            Assert.Equal(preco2, tabelaHash.ListasDePrecos[indiceEsperadoParaItem2].FirstOrDefault());
         }
 
         [Fact]
@@ -121,8 +121,8 @@ namespace EntendendoAlgoritmosTests._5.TabelaHashTest
 
             //Assert
             Assert.Equal(indiceEsperadoBanana, indiceEsperadoLaranja);
-            Assert.Contains(precoBanana, tabelaHash.PrecosList[indiceEsperadoBanana]);
-            Assert.Contains(precoLaranja, tabelaHash.PrecosList[indiceEsperadoLaranja]);
+            Assert.Contains(precoBanana, tabelaHash.ListasDePrecos[indiceEsperadoBanana]);
+            Assert.Contains(precoLaranja, tabelaHash.ListasDePrecos[indiceEsperadoLaranja]);
         }
     }
 }
