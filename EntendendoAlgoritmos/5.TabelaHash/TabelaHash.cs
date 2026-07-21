@@ -4,51 +4,30 @@ namespace EntendendoAlgoritmos._5.TabelaHash
 {
     public class TabelaHash
     {
-        // TODO
-        // Adicionar tratamento de colisão
-        public Preco[] ArrayDePrecos { get; set; }
-        private int _quantidadeDeItens;
+        private List<Preco>[] _listasDePrecos;
+        public IReadOnlyList<List<Preco>> ListasDePrecos => _listasDePrecos;
+
+        private int _quantidadeDeEspacosOcupados;
 
         public TabelaHash(int tamanhoDoArray)
         {
-            ArrayDePrecos = new Preco[tamanhoDoArray];
+            _listasDePrecos = new List<Preco>[tamanhoDoArray];
         }
 
         public void InserirPreco(Preco preco)
         {
-            _quantidadeDeItens++;
+            int indice = ObterIndice(preco.Item, (uint)_listasDePrecos.Length);
 
-            var fatorDeCarga = ObterFatorDeCarga();
-            if (fatorDeCarga > 0.7)
+            var temColisao = _listasDePrecos[indice] != null;
+
+            if (temColisao)
             {
-                RedimensionarArrayERedistribuirItens();
+                _listasDePrecos[indice].Add(preco);
             }
-
-            int indice = ObterIndice(preco.Item, (uint)ArrayDePrecos.Length);
-            ArrayDePrecos[indice] = preco;
-
-        }
-
-        private double ObterFatorDeCarga()
-        {
-            return (double)_quantidadeDeItens / ArrayDePrecos.Length;
-        }
-
-        private void RedimensionarArrayERedistribuirItens()
-        {
-            var novoArray = new Preco[ArrayDePrecos.Length * 2];
-            foreach (var itemNoArrayAntigo in ArrayDePrecos.Where(x => x != null))
+            else
             {
-                InserirNoNovoArray(novoArray, itemNoArrayAntigo);
+                AdicionaItemEmUmEspacoVazio(preco, indice);
             }
-
-            ArrayDePrecos = novoArray;
-        }
-
-        private void InserirNoNovoArray(Preco[] novoArray, Preco itemNoArrayAntigo)
-        {
-            var indiceNoNovoArray = ObterIndice(itemNoArrayAntigo.Item, (uint)novoArray.Length);
-            novoArray[indiceNoNovoArray] = itemNoArrayAntigo;
         }
 
         private int ObterIndice(string item, uint tamanhoDoArray)
@@ -58,11 +37,63 @@ namespace EntendendoAlgoritmos._5.TabelaHash
             return indice;
         }
 
-        public Preco BuscarPreco(string item)
+        private void AdicionaItemEmUmEspacoVazio(Preco preco, int indice)
         {
-            int indice = ObterIndice(item, (uint)ArrayDePrecos.Length);
+            _quantidadeDeEspacosOcupados++;
+            var fatorDeCarga = ObterFatorDeCarga();
+            if (fatorDeCarga > 0.7)
+            {
+                RedimensionarArrayERedistribuirItens();
+                InserirPreco(preco);
+            }
+            else
+            {
+                _listasDePrecos[indice] = new List<Preco>() { preco };
+            }
+        }
 
-            return ArrayDePrecos[indice];
+        private double ObterFatorDeCarga()
+        {
+            return (double)_quantidadeDeEspacosOcupados / _listasDePrecos.Length;
+        }
+
+        private void RedimensionarArrayERedistribuirItens()
+        {
+            var novoArray = new List<Preco>[_listasDePrecos.Length * 2];
+            _quantidadeDeEspacosOcupados = 0;
+
+            foreach (var listaDePreco in _listasDePrecos.Where(x => x != null))
+            {
+                foreach (var preco in listaDePreco)
+                {
+                    InserirNoNovoArray(novoArray, preco);
+                }
+            }
+
+            _listasDePrecos = novoArray;
+        }
+
+        private void InserirNoNovoArray(List<Preco>[] novoArray, Preco itemNoArrayAntigo)
+        {
+            var indiceNoNovoArray = ObterIndice(itemNoArrayAntigo.Item, (uint)novoArray.Length);
+
+            var temColisao = novoArray[indiceNoNovoArray] != null;
+            if (temColisao)
+            {
+                novoArray[indiceNoNovoArray].Add(itemNoArrayAntigo);
+            }
+            else
+            {
+                novoArray[indiceNoNovoArray] = new List<Preco>() { itemNoArrayAntigo };
+                _quantidadeDeEspacosOcupados++;
+            }
+        }
+
+        public Preco? BuscarPreco(string item)
+        {
+            int indice = ObterIndice(item, (uint)_listasDePrecos.Length);
+
+            return _listasDePrecos[indice]?.FirstOrDefault(x => x.Item == item);
         }
     }
 
