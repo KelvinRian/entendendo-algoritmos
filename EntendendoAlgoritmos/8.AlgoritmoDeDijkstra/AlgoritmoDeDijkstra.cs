@@ -37,6 +37,9 @@
                 }
                 //Adiciona vértice atual à lista de processados
                 processados.Add(verticeComMenorPeso);
+
+                //Busca próximo vértice com menor peso
+                verticeComMenorPeso = ObterVerticeComMenorPeso(pesos, processados);
             }
 
             //Retorna peso para chegar ao fim
@@ -78,11 +81,22 @@
     public class Vertice
     {
         public string Name { get; set; }
+
+        public Vertice(string name)
+        {
+            Name = name;
+        }
     }
 
     public class Vizinho
     {
         public Vertice Vertice { get; set; }
         public int Peso { get; set; }
+
+        public Vizinho(Vertice vertice, int peso)
+        {
+            Vertice = vertice;
+            Peso = peso;
+        }
     }
 }
